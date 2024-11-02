@@ -65,7 +65,9 @@ export class AuthService {
         },
       }),
       this.tourGuideRepository.findOne({
-        where: email,
+        where: {
+          email: email,
+        },
       }),
     ]);
     if (
