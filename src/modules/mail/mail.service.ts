@@ -9,6 +9,8 @@ import { ApproveTourEmailDto } from './dto/approve-tour-email.dto';
 import { ApproveOrderEmailDto } from './dto/approve-order-email.dto';
 import { CreateAdminDto } from './dto/send-create-admin-email.dto';
 import { CreateMeetingDto } from './dto/create-meeting-email.dto';
+import { aproveSuccessOrderMailToUserDto } from './dto/send-success-order-mail-to-user-dto.dto';
+import { aproveSuccessOrderMailToTourGuideDto } from './dto/send-success-order-mail-to-tour-guide-dto.dto';
 
 @Injectable()
 export class MailService {
@@ -62,6 +64,22 @@ export class MailService {
   async sendCreatMeetingMail(body: CreateMeetingDto): Promise<void> {
     await this.emailQueue.add('sendCreatMeetingMail', {
       ...body,
+    });
+  }
+
+  async sendSuccessOrderMailToUser(
+    aproveSuccessOrderMailToUserDto: aproveSuccessOrderMailToUserDto,
+  ): Promise<void> {
+    await this.emailQueue.add('sendSuccessOrderMailToUser', {
+      ...aproveSuccessOrderMailToUserDto,
+    });
+  }
+
+  async sendSuccessOrderMailToTourGuide(
+    aproveSuccessOrderMailToTourGuideDto: aproveSuccessOrderMailToTourGuideDto,
+  ): Promise<void> {
+    await this.emailQueue.add('sendSuccessOrderMailToTourGuide', {
+      ...aproveSuccessOrderMailToTourGuideDto,
     });
   }
 

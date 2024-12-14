@@ -170,6 +170,25 @@ export class OrderService {
         userVoucher,
       }),
     ]);
+
+    this.mailService.sendSuccessOrderMailToUser({
+      email: user.email,
+      userName: user.username,
+      tourName: tour.name,
+      startDate: startDate,
+      numberOfMembers: numberOfMember,
+      tourGuideName: tourGuide.name,
+    });
+
+    this.mailService.sendSuccessOrderMailToTourGuide({
+      email: tourGuide.email,
+      tourGuideName: tourGuide.name,
+      tourName: tour.name,
+      startDate: startDate,
+      numberOfMembers: numberOfMember,
+      userName: user.username,
+    });
+
     return httpResponse.GET_ORDER_SUCCESS;
   }
 
