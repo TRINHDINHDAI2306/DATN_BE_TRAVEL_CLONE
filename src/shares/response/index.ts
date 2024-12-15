@@ -35,6 +35,11 @@ export const httpResponse = {
     code: 'TOUR_001',
     statusCode: 200,
   },
+  DELETE_TOUR_SUCCESS: {
+    message: 'Tour has been deleted.',
+    code: 'TOUR_001',
+    statusCode: 200,
+  },
   APPROVE_TOUR_SUCCESS: {
     message: 'Tour have been actived',
     code: 'TOUR_002',
