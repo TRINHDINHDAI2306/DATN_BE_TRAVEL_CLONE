@@ -9,6 +9,8 @@ import { ApproveOrderEmailDto } from './dto/approve-order-email.dto';
 import { ActionApproveOrder } from 'src/shares/enum/order.enum';
 import { CreateAdminDto } from './dto/send-create-admin-email.dto';
 import { CreateMeetingDto } from './dto/create-meeting-email.dto';
+import { aproveSuccessOrderMailToUserDto } from './dto/send-success-order-mail-to-user-dto.dto';
+import { aproveSuccessOrderMailToTourGuideDto } from './dto/send-success-order-mail-to-tour-guide-dto.dto';
 //import * as moment from 'moment';
 
 @Processor('mail')
@@ -190,4 +192,70 @@ export class MailProcessor {
 
   // @Process('sendApproveTourMail')
   // async sendApproveTourMail() {}
+
+  @Process('sendSuccessOrderMailToUser')
+  async sendSuccessOrderMailToUser({
+    data,
+  }: Job<aproveSuccessOrderMailToUserDto>): Promise<number> {
+    this.logger.log(
+      `Start job: sendSuccessOrderMailToUser user ${data.userName} email ${data.email}`,
+    );
+    const context = {
+      email: data.email,
+      userName: data.userName,
+      tourName: data.tourName,
+      startDate: data.startDate,
+      numberOfMembers: data.numberOfMembers,
+      tourGuideName: data.tourGuideName,
+    };
+
+    try {
+      await this.mailerService.sendMail({
+        from: emailConfig.from,
+        to: data.email,
+        subject: `Xác nhận đặt tour thành công.`,
+        template: `src/modules/mail/templates/send-success-order-mail-to-user.template.hbs`,
+        context: context,
+      });
+    } catch (e) {
+      this.logger.debug(e);
+    }
+    this.logger.log(
+      `Done job: sendSuccessOrderMailToUser ${data.email} email ${data.userName}`,
+    );
+    return 1;
+  }
+
+  @Process('sendSuccessOrderMailToTourGuide')
+  async sendSuccessOrderMailToTourGuide({
+    data,
+  }: Job<aproveSuccessOrderMailToTourGuideDto>): Promise<number> {
+    this.logger.log(
+      `Start job: sendSuccessOrderMailToTourGuide user ${data.userName} email ${data.email}`,
+    );
+    const context = {
+      email: data.email,
+      userName: data.userName,
+      tourName: data.tourName,
+      startDate: data.startDate,
+      numberOfMembers: data.numberOfMembers,
+      tourGuideName: data.tourGuideName,
+    };
+
+    try {
+      await this.mailerService.sendMail({
+        from: emailConfig.from,
+        to: data.email,
+        subject: `Thông báo đơn đặt tour mới.`,
+        template: `src/modules/mail/templates/send-success-order-mail-to-tour-guide.template.hbs`,
+        context: context,
+      });
+    } catch (e) {
+      this.logger.debug(e);
+    }
+    this.logger.log(
+      `Done job: sendSuccessOrderMailToTourGuide ${data.email} email ${data.userName}`,
+    );
+    return 1;
+  }
 }
