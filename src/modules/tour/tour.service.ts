@@ -326,6 +326,30 @@ export class TourService {
     };
   }
 
+  async getTourWithTourGuide(id: number, tourGuideId): Promise<Response> {
+    const tour = await this.tourRepository.findOne({
+      where: {
+        id,
+        tourGuide: {id: tourGuideId, verifyStatus: TourguideStatus.ACTIVE },
+      },
+      relations: [
+        'images',
+        'rates',
+        'tourGuide',
+        'userFavorites',
+        'tourSchedule',
+        'province',
+      ],
+    });
+    if (!tour) {
+      throw new HttpException(httpErrors.TOUR_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    return {
+      ...httpResponse.GET_PROVINCE_SUCCESS,
+      returnValue: tour,
+    };
+  }
+
   async getApproveList(options: GetTourDto) {
     const data = await this.tourRepository.findAndCount({
       where: {
