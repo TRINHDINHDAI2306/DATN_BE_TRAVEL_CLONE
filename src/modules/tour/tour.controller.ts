@@ -63,7 +63,7 @@ export class TourController {
 
   @Get('/tour-guide')
   @UseGuards(TourGuideAuthGuard)
-  async getTourWithTourGuide(
+  async getToursWithTourGuide(
     @Query() options: GetTourWithTourGuideDto,
     @ActorID() tourGuideId: number,
   ): Promise<Response> {
@@ -73,6 +73,14 @@ export class TourController {
   @Get('/:id')
   async getOneTour(@Param('id') id: number) {
     return this.tourService.getTour(id);
+  }
+  @Get('/tour-guide/:id')
+  @UseGuards(TourGuideAuthGuard)
+  async getTourWithTourGuide(
+    @Param('id') id: number,
+    @ActorID() tourGuideId: number,
+  ) {
+    return this.tourService.getTourWithTourGuide(id, tourGuideId);
   }
 
   @Get('/admin/approve-list')
