@@ -36,6 +36,16 @@ export class TourController {
   // @Put('/active')
   // @UseGuards()
 
+  @Post('/:id')
+  @UseGuards(TourGuideAuthGuard)
+  async editTour(
+    @Param('id') tourId: number,
+    @Body() body: CreateTourDto,
+    @ActorID() tourGuideId: number,
+  ): Promise<Response> {
+    return this.tourService.editTour(tourId, body, tourGuideId);
+  }
+
   @Get('/')
   async getTour(@Query() options: GetTourDto): Promise<Response> {
     return this.tourService.getTours(options);

@@ -30,6 +30,11 @@ export const httpResponse = {
     code: 'TOUR_001',
     statusCode: 200,
   },
+  UPDATE_TOUR_SUCCESS: {
+    message: 'Tour has been edited.',
+    code: 'TOUR_001',
+    statusCode: 200,
+  },
   APPROVE_TOUR_SUCCESS: {
     message: 'Tour have been actived',
     code: 'TOUR_002',
