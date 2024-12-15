@@ -78,6 +78,74 @@ export class TourService {
     return httpResponse.CREATE_TOUR_SUCCESS;
   }
 
+  async editTour(
+    tourId: number,
+    body: CreateTourDto,
+    tourGuideId: number,
+  ): Promise<Response> {
+    const { name, description, basePrice, provinceId, overview } = body;
+  
+    const tour = await this.tourRepository.findOne({
+      where: { id: tourId, tourGuide: { id: tourGuideId } },
+      relations: ['tourGuide', 'province', 'images', 'tourSchedule'],
+    });
+  
+    if (!tour) {
+      throw new HttpException(httpErrors.TOUR_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+  
+    if (name && name !== tour.name) {
+      const existingTour = await this.tourRepository.findOne({ where: { name } });
+      if (existingTour) {
+        throw new HttpException(httpErrors.TOUR_EXIST, HttpStatus.CONFLICT);
+      }
+    }
+  
+    let province = null;
+    if (provinceId) {
+      province = await this.provinceRepository.findOne({ where: { id: provinceId } });
+      if (!province) {
+        throw new HttpException(httpErrors.PROVINCE_NOT_FOUND, HttpStatus.NOT_FOUND);
+      }
+    }
+  
+    if (body.tourSchedules) {
+      await this.tourScheduleRepository.delete({ tour: { id: tourId } });
+  
+      const newSchedules = await this.tourScheduleRepository.save([
+        ...body.tourSchedules.map((schedule) => ({
+          content: schedule.content,
+          tour,
+        })),
+      ]);
+      tour.tourSchedule = newSchedules;
+    }
+  
+    if (body.tourImages) {
+      await this.tourImageRepository.delete({ tour: { id: tourId } });
+  
+
+      const newImages = await this.tourImageRepository.save([
+        ...body.tourImages.map((image) => ({
+          url: image.url,
+          tour,
+        })),
+      ]);
+      tour.images = newImages;
+    }
+  
+    tour.name = name || tour.name;
+    tour.description = description || tour.description;
+    tour.basePrice = basePrice || tour.basePrice;
+    tour.province = province || tour.province;
+    tour.overview = overview || tour.overview;
+  
+    await this.tourRepository.save(tour);
+  
+    return httpResponse.UPDATE_TOUR_SUCCESS;
+  }
+  
+
   async getTours(options: GetTourDto): Promise<Response> {
     // const tours = await this.tourRepository.fin
     const { provinceId, tourGuideId, minPrice, maxPrice, types } = options;
