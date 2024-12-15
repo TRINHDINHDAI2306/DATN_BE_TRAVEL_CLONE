@@ -36,7 +36,7 @@ export class TourService {
     body: CreateTourDto,
     tourGuideId: number,
   ): Promise<Response> {
-    const { name, description, basePrice, provinceId, overview, maxMember} = body;
+    const { name, description, basePrice, provinceId, overview, maxMember, feePerMember} = body;
     const [tour, tourGuide, province] = await Promise.all([
       this.tourRepository.findOne({
         where: { name },
@@ -77,7 +77,8 @@ export class TourService {
       province,
       overview,
       tour,
-      maxMember
+      maxMember,
+      feePerMember
     });
     return httpResponse.CREATE_TOUR_SUCCESS;
   }
@@ -87,7 +88,7 @@ export class TourService {
     body: CreateTourDto,
     tourGuideId: number,
   ): Promise<Response> {
-    const { name, description, basePrice, provinceId, overview, maxMember} = body;
+    const { name, description, basePrice, provinceId, overview, maxMember, feePerMember} = body;
   
     const tour = await this.tourRepository.findOne({
       where: { id: tourId, tourGuide: { id: tourGuideId } },
@@ -145,6 +146,7 @@ export class TourService {
     tour.province = province || tour.province;
     tour.overview = overview || tour.overview;
     tour.maxMember = maxMember ||tour.maxMember;
+    tour.feePerMember = feePerMember ||tour.feePerMember;
   
     await this.tourRepository.save(tour);
   
