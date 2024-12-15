@@ -19,6 +19,7 @@ import { Between, In, LessThanOrEqual, MoreThanOrEqual, Not } from 'typeorm';
 import { ApproveTourDto } from './dtos/approve-tour.dto';
 import { CreateTourDto } from './dtos/create-tour.dto';
 import { GetTourDto } from './dtos/get-tour-dto';
+import { GetTourWithTourGuideDto } from './dtos/get-tour-with-tour-guide.dto';
 
 @Injectable()
 export class TourService {
@@ -219,6 +220,65 @@ export class TourService {
       where: {
         ...where,
         status: TourStatus.ACTIVE,
+      },
+      relations: [
+        'images',
+        'rates',
+        'tourGuide',
+        'userFavorites',
+        'tourSchedule',
+        'province',
+      ],
+      take: options.limit,
+      skip: (options.page - 1) * options.limit,
+    });
+    return {
+      returnValue: BasePaginationResponseDto.convertToPaginationWithTotalPages(
+        data,
+        options.page || 1,
+        options.limit || 10,
+      ),
+      ...httpResponse.GET_TOUR_SUCCESS,
+    };
+  }
+  async getToursWithTourGuide(options: GetTourWithTourGuideDto, tourGuideId): Promise<Response> {
+    // const tours = await this.tourRepository.fin
+    const { provinceId, minPrice, maxPrice, types } = options;
+    const tourTypesArray = types
+      ?.replace(/\s/g, '')
+      .split(',')
+      .filter((e) => (Object.values(TourTypes) as string[]).includes(e));
+
+    const where = {};
+    let province, tourGuide;
+    if (provinceId) {
+      province = await this.provinceRepository.findOne({
+        where: { id: provinceId },
+      });
+      where[`province`] = province;
+    }
+    if (tourGuideId) {
+      tourGuide = await this.tourGuideRepository.findOne({
+        where: { id: tourGuideId, verifyStatus: TourguideStatus.ACTIVE },
+      });
+      where[`tourGuide`] = tourGuide;
+    }
+    if (minPrice && maxPrice) {
+      where[`basePrice`] = Between(minPrice, maxPrice);
+    }
+    if (minPrice && !maxPrice) {
+      where[`basePrice`] = MoreThanOrEqual(minPrice);
+    }
+    if (!minPrice && maxPrice) {
+      where[`basePrice`] = LessThanOrEqual(maxPrice);
+    }
+
+    if (tourTypesArray && tourTypesArray.length > 0) {
+      where[`type`] = In(tourTypesArray);
+    }
+    const data = await this.tourRepository.findAndCount({
+      where: {
+        ...where
       },
       relations: [
         'images',

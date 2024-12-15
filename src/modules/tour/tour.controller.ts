@@ -18,6 +18,7 @@ import { ApproveTourDto } from './dtos/approve-tour.dto';
 import { CreateTourDto } from './dtos/create-tour.dto';
 import { GetTourDto } from './dtos/get-tour-dto';
 import { TourService } from './tour.service';
+import { GetTourWithTourGuideDto } from './dtos/get-tour-with-tour-guide.dto';
 
 @Controller('tours')
 @ApiTags('Tour')
@@ -58,6 +59,15 @@ export class TourController {
   @Get('/')
   async getTour(@Query() options: GetTourDto): Promise<Response> {
     return this.tourService.getTours(options);
+  }
+
+  @Get('/tour-guide')
+  @UseGuards(TourGuideAuthGuard)
+  async getTourWithTourGuide(
+    @Query() options: GetTourWithTourGuideDto,
+    @ActorID() tourGuideId: number,
+  ): Promise<Response> {
+    return this.tourService.getToursWithTourGuide(options, tourGuideId);
   }
 
   @Get('/:id')
