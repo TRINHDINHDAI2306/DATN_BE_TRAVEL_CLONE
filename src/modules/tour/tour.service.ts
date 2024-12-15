@@ -3,6 +3,7 @@ import { ProvinceRepository } from 'src/models/repositories/province.repository'
 import { TourImageRepository } from 'src/models/repositories/tour-image.repository';
 import { TourScheduleRepository } from 'src/models/repositories/tour-schedule.repository';
 import { TourRepository } from 'src/models/repositories/tour.repository';
+import { OrderRepository } from 'src/models/repositories/order.repository';
 import { TourGuideRepository } from 'src/models/repositories/tourguide.repository';
 import { BasePaginationResponseDto } from 'src/shares/dtos/base-pagination.dto';
 import {
@@ -23,6 +24,7 @@ import { GetTourDto } from './dtos/get-tour-dto';
 export class TourService {
   constructor(
     private readonly tourRepository: TourRepository,
+    private readonly orderRepository: OrderRepository,
     private readonly tourScheduleRepository: TourScheduleRepository,
     private readonly tourImageRepository: TourImageRepository,
     private readonly tourGuideRepository: TourGuideRepository,
@@ -115,6 +117,7 @@ export class TourService {
   
       const newSchedules = await this.tourScheduleRepository.save([
         ...body.tourSchedules.map((schedule) => ({
+          ...schedule,
           content: schedule.content,
           tour,
         })),
@@ -146,7 +149,36 @@ export class TourService {
   
     return httpResponse.UPDATE_TOUR_SUCCESS;
   }
-  
+
+  async deleteTour(tourId: number): Promise<Response> {
+    const tour = await this.tourRepository.findOne({
+      where: { id: tourId },
+      relations: ['tourSchedule', 'images'],
+    });
+
+    if (!tour) {
+      throw new HttpException(httpErrors.TOUR_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+
+    const orderExists = await this.orderRepository.findOne({
+      where: { tour: { id: tourId } },
+    });
+
+    if (orderExists) {
+      throw new HttpException(httpErrors.CAN_NOT_DELETE, HttpStatus.FORBIDDEN);
+    }
+
+    if (tour.tourSchedule && tour.tourSchedule.length > 0) {
+      await this.tourScheduleRepository.remove(tour.tourSchedule);
+    }
+
+    if (tour.images && tour.images.length > 0) {
+      await this.tourImageRepository.remove(tour.images);
+    }
+    await this.tourRepository.remove(tour);
+
+    return httpResponse.DELETE_TOUR_SUCCESS;
+  } 
 
   async getTours(options: GetTourDto): Promise<Response> {
     // const tours = await this.tourRepository.fin

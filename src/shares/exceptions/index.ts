@@ -72,6 +72,10 @@ export const httpErrors = {
     message: 'Tour không tồn tại',
     code: 'ERR_TOUR_002',
   },
+  CAN_NOT_DELETE: {
+    message: 'Không thể xóa tour vì đã có người đặt tour.',
+    code: 'ERR_TOUR_003',
+  },
   //TOUR GUIDE
   TOUR_GUIDE_NOT_FOUND: {
     message: 'Hướng dẫn viên không tồn tại',

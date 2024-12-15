@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -44,6 +45,14 @@ export class TourController {
     @ActorID() tourGuideId: number,
   ): Promise<Response> {
     return this.tourService.editTour(tourId, body, tourGuideId);
+  }
+
+  @Delete('/:id')
+  @UseGuards(TourGuideAuthGuard)
+  async deleteTour(
+    @Param('id') tourId: number,
+  ): Promise<Response> {
+    return this.tourService.deleteTour(tourId);
   }
 
   @Get('/')
