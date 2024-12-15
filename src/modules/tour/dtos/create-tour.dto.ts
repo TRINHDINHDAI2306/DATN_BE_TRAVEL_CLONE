@@ -46,6 +46,11 @@ export class CreateTourDto {
   provinceId: number;
 
   @ApiProperty()
+  @IsNumber({}, { message: 'Số lượng tối đa thành viên phải là một số' })
+  @IsNotEmpty({ message: 'Số lượng tối đa thành viên không được để trống' })
+  maxMember: number;
+
+  @ApiProperty()
   @IsEnum(TourTypes, { message: 'Loại tour phải thuộc một trong các giá trị hợp lệ.' })
   @IsNotEmpty({ message: 'Loại tour không được để trống.' })
   type: TourTypes;
