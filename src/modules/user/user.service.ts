@@ -181,7 +181,7 @@ export class UserService {
     vnp_Params['vnp_ReturnUrl'] = returnUrl;
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = +createDate;
-    vnp_Params['vnp_CreateDate'] = +expiredDate;
+    vnp_Params['vnp_ExpireDate'] = +expiredDate;
     vnp_Params['vnp_OrderType'] = 'other';
     // if (bankCode !== null && bankCode !== '') {
     // vnp_Params['vnp_BankCode'] = bankCode;
