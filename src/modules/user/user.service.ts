@@ -161,6 +161,7 @@ export class UserService {
         : vnPayConfig.RETURN_URL_MOBILE;
     const date = new Date();
     const createDate = moment(date).format('YYYYMMDDHHmmss');
+    const expiredDate = moment(date).add(1, 'days').format('YYYYMMDDHHmmss');
     const orderId = moment(date).format('DDHHmmss');
     const amount = body.amount;
     const bankCode = 'NCB';
@@ -180,6 +181,8 @@ export class UserService {
     vnp_Params['vnp_ReturnUrl'] = returnUrl;
     vnp_Params['vnp_IpAddr'] = ipAddr;
     vnp_Params['vnp_CreateDate'] = +createDate;
+    vnp_Params['vnp_ExpireDate'] = +expiredDate;
+    vnp_Params['vnp_OrderType'] = 'other';
     // if (bankCode !== null && bankCode !== '') {
     // vnp_Params['vnp_BankCode'] = bankCode;
     // vnp_Params['vnp_ExpireDate'] = expiredDate;
