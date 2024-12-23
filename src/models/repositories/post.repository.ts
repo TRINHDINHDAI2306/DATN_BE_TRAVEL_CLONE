@@ -63,4 +63,70 @@ export class PostRepository extends Repository<Post> {
       .take(limit);
     return queryBuilder.getManyAndCount();
   }
+
+  async getPostUserByKeywordAndType(
+    userId: number,
+    keyword: string,
+    topic: Topics,
+    page: number,
+    limit: number,
+  ) {
+    const queryBuilder = this.createQueryBuilder('post')
+      .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.tourGuide', 'tourGuide');
+    if (keyword) {
+      const keywordLike = `%${keyword}%`;
+      queryBuilder
+        .where('post.title LIKE :keyword')
+        .orWhere('post.id LIKE :keyword')
+        .orWhere('user.username LIKE :keyword')
+        .orWhere('tourGuide.username LIKE :keyword')
+        .orWhere('tourGuide.name LIKE :keyword')
+        .setParameters({ keyword: keywordLike });
+    }
+    if (topic) {
+      queryBuilder.andWhere('post.topic = :topic', { topic });
+    }
+    if (userId) {  
+      queryBuilder.andWhere('post.user_id = :userId', { userId });
+    }
+    queryBuilder
+      .orderBy('post.id', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+    return queryBuilder.getManyAndCount();
+  }
+  async getPostTourGuideByKeywordAndType(
+    tourGuideId: number,
+    keyword: string,
+    topic: Topics,
+    page: number,
+    limit: number,
+  ) {
+    const queryBuilder = this.createQueryBuilder('post')
+      .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.tourGuide', 'tourGuide');
+    if (keyword) {
+      const keywordLike = `%${keyword}%`;
+      queryBuilder
+        .where('post.title LIKE :keyword')
+        .orWhere('post.id LIKE :keyword')
+        .orWhere('user.username LIKE :keyword')
+        .orWhere('tourGuide.username LIKE :keyword')
+        .orWhere('tourGuide.name LIKE :keyword')
+        .setParameters({ keyword: keywordLike });
+    }
+    if (topic) {
+      queryBuilder.andWhere('post.topic = :topic', { topic });
+    }
+    if (tourGuideId) {
+      queryBuilder.andWhere('post.tour_guide_id = :tourGuideId', { tourGuideId });
+    }
+
+    queryBuilder
+      .orderBy('post.id', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+    return queryBuilder.getManyAndCount();
+  }
 }

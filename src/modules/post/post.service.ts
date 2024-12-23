@@ -95,6 +95,47 @@ export class PostService {
     };
   }
 
+  async getListPostUser(userId: number,options: GetPostDto): Promise<Response> {
+    const { topics, limit, page, keyword } = options;
+    console.log(userId);
+    
+    const posts = await this.postRepository.getPostUserByKeywordAndType(
+      userId,
+      keyword,
+      topics,
+      page,
+      limit,
+    );
+    return {
+      ...httpResponse.GET_POST_SUCCESS,
+      returnValue: BasePaginationResponseDto.convertToPaginationWithTotalPages(
+        posts,
+        options.page || 1,
+        options.limit || 10,
+      ),
+    };
+  }
+
+  async getListPostTourguide(tourGuideId: number,options: GetPostDto): Promise<Response> {
+    const { topics, limit, page, keyword } = options;
+
+    const posts = await this.postRepository.getPostTourGuideByKeywordAndType(
+      tourGuideId,
+      keyword,
+      topics,
+      page,
+      limit,
+    );
+    return {
+      ...httpResponse.GET_POST_SUCCESS,
+      returnValue: BasePaginationResponseDto.convertToPaginationWithTotalPages(
+        posts,
+        options.page || 1,
+        options.limit || 10,
+      ),
+    };
+  }
+
   async adminUpdateStatusPost(body: UpdateStatusBlogDto) {
     const { postId, status } = body;
     if (![PostStatus.ACTIVE, PostStatus.REJECTED].includes(status)) {
@@ -175,12 +216,12 @@ export class PostService {
     actorId: number,
     role: ActorRole,
   ): Promise<Response> {
-    const { content, postId } = body;
+    const { postId, title, content, topic, image} = body;
     if (role === ActorRole.ADMIN) {
       throw new HttpException(httpErrors.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 
-    const [post, actor] = await Promise.all([
+    const [post, actor, checkTitle] = await Promise.all([
       this.postRepository.findOne({
         where: { id: postId },
       }),
@@ -194,7 +235,18 @@ export class PostService {
         : this.tourGuideRepository.findOne({
             where: { id: actorId, verifyStatus: TourguideStatus.ACTIVE },
           }),
+      this.postRepository.findOne({
+        where: { 
+          title : title,
+          id: Not(postId),
+        },
+      })
     ]);
+    
+    if (checkTitle) {
+      throw new HttpException(httpErrors.POST_EXISTED, HttpStatus.FOUND);
+    }
+
     if (!post) {
       throw new HttpException(httpErrors.POST_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
@@ -207,15 +259,19 @@ export class PostService {
       );
     }
     const saveData = {
-      status: PostStatus.WAITING,
-      updateContent: content,
+      status: PostStatus.PENDING,
+      title: title,
+      content: content,
+      topic: topic,
+      image: image,
     };
     if (role === ActorRole.USER) {
       saveData['user'] = actor;
     } else {
       saveData['tourGuide'] = actor;
     }
-    await this.postRepository.insert({
+    await this.postRepository.save({
+      ...post,
       ...saveData,
     });
     return httpResponse.REQUEST_UPDATE_POST_SUCCESS;

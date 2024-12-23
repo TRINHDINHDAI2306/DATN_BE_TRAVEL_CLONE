@@ -24,6 +24,8 @@ import {
   UpdateStatusBlogDto,
 } from './dtos/update-status.dto';
 import { PostService } from './post.service';
+import { TourGuideAuthGuard } from '../auth/guards/tour-guide-auth.guard';
+import { UserAuthGuard } from '../auth/guards/user-auth.guard';
 
 @Controller('posts')
 @ApiTags('Post')
@@ -39,6 +41,25 @@ export class PostController {
   @Get('/user-tourguide')
   async getListPost(@Query() options: GetPostDto): Promise<Response> {
     return this.postService.getListPost(options);
+  }
+  
+  @Get('/user')
+  @UseGuards(UserAuthGuard)
+  async getListPostUser(
+    @ActorID() userId: number,
+    @Query() options: GetPostDto
+  ): Promise<Response> {
+    return this.postService.getListPostUser(userId, options);
+  }
+
+  @Get('/tourguide')
+  @UseGuards(TourGuideAuthGuard)
+
+  async getListPostTourguide(
+    @ActorID() tourGuideId: number,
+    @Query() options: GetPostDto
+  ): Promise<Response> {
+    return this.postService.getListPostTourguide(tourGuideId, options);
   }
 
   @Get('/top')
