@@ -52,9 +52,6 @@ export class PostService {
     const where = {
       id: postId,
     };
-    if (role !== 'admin') {
-      where['status'] = In([PostStatus.ACTIVE, PostStatus.WAITING]);
-    }
     const post = await this.postRepository.findOne({
       where,
       relations,
@@ -333,6 +330,7 @@ export class PostService {
           HttpStatus.UNAUTHORIZED,
         );
       }
+      await this.postRepository.softDelete(post.id);
     }
     return httpResponse.DELETE_POST_SUCCESS;
   }
