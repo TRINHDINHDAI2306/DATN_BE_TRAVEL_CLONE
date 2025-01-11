@@ -20,12 +20,16 @@ import { AdminChangeStatusUserDto } from './dtos/change-user-status.dto';
 import { AdminGetUsersDto } from './dtos/get-list-user.dto';
 import { TransferDto } from './dtos/transfer.dto';
 import { UserService } from './user.service';
+import { UpdateProfileDto } from './dtos/update-profile.dto';
+import { CreateConsultationDto } from './dtos/create-consultation.dto';
 
 @Controller('users')
 @ApiTags('User')
 @ApiBearerAuth()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+  ) {}
 
   @Get('/')
   @UseGuards(AdminModAuthGuard)
@@ -77,5 +81,21 @@ export class UserController {
     @ActorID() userId: number,
   ): Promise<Response> {
     return this.userService.getUserTransaction(options, userId);
+  }
+
+  @UseGuards(UserAuthGuard)
+  @Put('profile')
+  async updateProfile(
+    @Body() updateProfileDto: UpdateProfileDto,
+    @ActorID() userId: number,
+  ) {
+    return this.userService.updateProfile(userId, updateProfileDto);
+  }
+
+  @Post('\send-consultation')
+  async sendConsultation(
+    @Body() createConsultationDto: CreateConsultationDto
+  ) {
+    return await this.userService.sendConsultation(createConsultationDto);
   }
 }

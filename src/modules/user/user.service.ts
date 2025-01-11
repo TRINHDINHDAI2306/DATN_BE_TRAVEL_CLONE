@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
 import { of } from 'rxjs';
 import { vnPayConfig } from 'src/configs/digital-wallet';
@@ -28,6 +28,9 @@ import { promisify } from 'util';
 import { AdminChangeStatusUserDto } from './dtos/change-user-status.dto';
 import { AdminGetUsersDto } from './dtos/get-list-user.dto';
 import { TransferDto } from './dtos/transfer.dto';
+import { UpdateProfileDto } from './dtos/update-profile.dto';
+import { CreateConsultationDto } from './dtos/create-consultation.dto';
+import { MailService } from '../mail/mail.service';
 const getIP = promisify(require('external-ip')());
 
 @Injectable()
@@ -37,6 +40,7 @@ export class UserService {
     private readonly transactionRepository: TransactionRepository,
     private readonly postRepository: PostRepository,
     private readonly tourGuideRepository: TourGuideRepository,
+    private mailService: MailService,
   ) {}
 
   async getUserByIdAndEmail(id: number, email: string) {
@@ -325,5 +329,53 @@ export class UserService {
 
       console.log('Error');
     }
+  }
+
+  async updateProfile(userId: number, updateProfileDto: UpdateProfileDto) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId, verifyStatus: UserStatus.ACTIVE },
+    });
+    if (!user) {
+      throw new HttpException(httpErrors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+
+    const { username, email, phone, avatar } = updateProfileDto;
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+    if (avatar) user.avatar = avatar;
+
+    await this.userRepository.save(user);
+
+    return { message: 'Profile updated successfully', user };
+  }
+
+  async sendConsultation(createConsultationDto: CreateConsultationDto) {
+    const { tourGuideId, name, phone, email, message } = createConsultationDto;
+
+    const tourGuide = await this.tourGuideRepository.findOne({
+      where: {
+        id: tourGuideId,
+        verifyStatus: TourguideStatus.ACTIVE,
+      },
+    });
+    if (!tourGuide) {
+      throw new HttpException(
+        httpErrors.TOUR_GUIDE_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    // Gửi email
+
+    this.mailService.sendConsultation({
+      name: name,
+      phone: phone,
+      email: email,
+      message: message,
+      tourGuideEmail: tourGuide.email,
+    })
+
+    return { message: 'Tư vấn đã được gửi thành công' };
   }
 }

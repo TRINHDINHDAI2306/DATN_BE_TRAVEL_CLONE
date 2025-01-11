@@ -395,6 +395,8 @@ export class OrderService {
         `${order.startDate}`,
         `${order.endDate}`,
       );
+      console.log(order.tourGuide.availableBalance, (system.tourGuidePrepaidOrder / 100) * order.price);
+      
       if (
         +order.tourGuide.availableBalance <
         +(system.tourGuidePrepaidOrder / 100) * order.price
