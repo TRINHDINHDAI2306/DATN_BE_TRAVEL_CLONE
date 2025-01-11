@@ -84,7 +84,7 @@ export class UserController {
   }
 
   @UseGuards(UserAuthGuard)
-  @Put('profile')
+  @Put('/profile')
   async updateProfile(
     @Body() updateProfileDto: UpdateProfileDto,
     @ActorID() userId: number,

@@ -261,31 +261,28 @@ export class MailProcessor {
     return 1;
   }
 
-  @Process('sendConsultation') 
-  async handleSendConsultation({ data }: Job<SendConsultationDto>): Promise<number> {
+  @Process('sendConsultationMailToTourGuide') 
+  async sendConsultationMailToTourGuide({ data }: Job<SendConsultationDto>): Promise<number> {
     const { name, phone, email, message, tourGuideEmail } = data;
-    console.log(tourGuideEmail);
     const context = {
       email: email,
       name: name,
       phone: phone,
       message: message,
     };
-    // Gửi email sử dụng MailService
-    await this.mailerService.sendMail({
-      from: emailConfig.from,
-      to: "namvubao98@gmail.com",
-      subject: 'Yêu cầu tư vấn mới từ khách hàng',
-      template: `src/modules/mail/templates/send-consultation-mail-to-tour-guide.template.hbs`,
-      context: context,
-    });
-    // text: `Khách hàng ${name} đã gửi yêu cầu tư vấn. Thông tin chi tiết:\n
-    //   - Tên: ${name}\n
-    //   - Số điện thoại: ${phone}\n
-    //   - Email: ${email}\n
-    //   - Tin nhắn: ${message}\n`,
+    try {
+      await this.mailerService.sendMail({
+        from: emailConfig.from,
+        to: "namvubao98@gmail.com",
+        subject: 'Yêu cầu tư vấn mới từ khách hàng',
+        template: `src/modules/mail/templates/send-consultation-mail-to-tour-guide.template.hbs`,
+        context: context,
+      });
   
-    this.logger.log(`Email đã gửi thành công cho ${tourGuideEmail}`);
+      this.logger.log(`Email đã gửi thành công cho ${tourGuideEmail}`);
+    } catch (error) {
+      console.error('Lỗi khi gửi email:', error);
+    }
     
     return 1;
   }
