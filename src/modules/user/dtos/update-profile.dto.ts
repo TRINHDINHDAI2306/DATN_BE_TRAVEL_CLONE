@@ -10,10 +10,8 @@ export class UpdateProfileDto {
   email?: string;
 
   @IsOptional()
-  @IsPhoneNumber()
   phone?: string;
 
   @IsOptional()
-  @IsUrl()
   avatar?: string;
 }
