@@ -9,6 +9,7 @@ import { UserService } from './user.service';
 @Module({
   imports: [
     AdminModule,
+    MailModule,
     JwtModule.registerAsync({
       imports: [ConfigModule, MailModule],
       useFactory: (configService: ConfigService) =>
