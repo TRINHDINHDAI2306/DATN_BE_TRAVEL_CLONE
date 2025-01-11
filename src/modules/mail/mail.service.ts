@@ -84,10 +84,10 @@ export class MailService {
     });
   }
 
-  async sendConsultation(
+  async sendConsultationMailToTourGuide(
     sendConsultationDto: SendConsultationDto,
   ): Promise<void> {
-    await this.emailQueue.add('sendConsultation', {
+    await this.emailQueue.add('sendConsultationMailToTourGuide', {
       ...sendConsultationDto,
     });
   }

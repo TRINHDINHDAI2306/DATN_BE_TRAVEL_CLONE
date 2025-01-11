@@ -31,6 +31,8 @@ import { TransferDto } from './dtos/transfer.dto';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { CreateConsultationDto } from './dtos/create-consultation.dto';
 import { MailService } from '../mail/mail.service';
+import { authConfig } from 'src/configs/auth.config';
+import * as bcrypt from 'bcryptjs';
 const getIP = promisify(require('external-ip')());
 
 @Injectable()
@@ -338,10 +340,11 @@ export class UserService {
     if (!user) {
       throw new HttpException(httpErrors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
-
-    const { username, email, phone, avatar } = updateProfileDto;
+    
+    const { username, password, phone, avatar } = updateProfileDto;
+    const passwordHash = await bcrypt.hash(password, +authConfig.salt);
     if (username) user.username = username;
-    if (email) user.email = email;
+    if (password) user.password =  passwordHash;
     if (phone) user.phone = phone;
     if (avatar) user.avatar = avatar;
 
@@ -368,13 +371,13 @@ export class UserService {
 
     // Gửi email
 
-    this.mailService.sendConsultation({
+    this.mailService.sendConsultationMailToTourGuide({
       name: name,
       phone: phone,
       email: email,
       message: message,
       tourGuideEmail: tourGuide.email,
-    })
+    })   
 
     return { message: 'Tư vấn đã được gửi thành công' };
   }
