@@ -193,4 +193,10 @@ export const httpErrors = {
     message: 'Không thấy bình luận',
     code: 'ERR_COMMENT_001',
   },
+
+  CURRENT_PASSWORD_IS_INCORRECT: {
+    message: 'Mật khẩu hiện tại không đúng.',
+    code: 'ERR_REQUEST_001',
+  },
+  
 };

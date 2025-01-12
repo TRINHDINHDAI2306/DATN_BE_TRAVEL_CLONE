@@ -33,6 +33,7 @@ import { CreateConsultationDto } from './dtos/create-consultation.dto';
 import { MailService } from '../mail/mail.service';
 import { authConfig } from 'src/configs/auth.config';
 import * as bcrypt from 'bcryptjs';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 const getIP = promisify(require('external-ip')());
 
 @Injectable()
@@ -341,16 +342,14 @@ export class UserService {
       throw new HttpException(httpErrors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     
-    const { username, password, phone, avatar } = updateProfileDto;
-    const passwordHash = await bcrypt.hash(password, +authConfig.salt);
+    const { username, phone, avatar } = updateProfileDto;
     if (username) user.username = username;
-    if (password) user.password =  passwordHash;
     if (phone) user.phone = phone;
     if (avatar) user.avatar = avatar;
 
     await this.userRepository.save(user);
 
-    return { message: 'Profile updated successfully', user };
+    return httpResponse.SEND_CONSULTATION;
   }
 
   async sendConsultation(createConsultationDto: CreateConsultationDto) {
@@ -379,6 +378,33 @@ export class UserService {
       tourGuideEmail: tourGuide.email,
     })   
 
-    return { message: 'Tư vấn đã được gửi thành công' };
+    return httpResponse.SEND_CONSULTATION;
+  }
+
+  async changePassword(userId: number, changePasswordDto: ChangePasswordDto): Promise<{ message: string }> {
+    const { currentPassword, newPassword } = changePasswordDto;
+  
+    // Lấy thông tin user từ database
+    const user = await this.userRepository.findOne({
+      where: { id: userId, verifyStatus: UserStatus.ACTIVE },
+    });
+    if (!user) {
+      throw new HttpException(httpErrors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+  
+    // Kiểm tra mật khẩu hiện tại
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordValid) {
+      throw new HttpException(httpErrors.CURRENT_PASSWORD_IS_INCORRECT, HttpStatus.BAD_REQUEST);
+    }
+  
+    // Mã hóa mật khẩu mới
+    const hashedNewPassword = await bcrypt.hash(newPassword, +authConfig.salt);
+  
+    // Cập nhật mật khẩu
+    user.password = hashedNewPassword;
+    await this.userRepository.save(user);
+  
+    return httpResponse.CHANGE_PASSWORD;
   }
 }
