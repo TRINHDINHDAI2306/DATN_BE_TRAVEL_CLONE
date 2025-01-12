@@ -22,7 +22,7 @@ export class CronTask {
     private readonly tourGuideRepository: TourGuideRepository,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS, {
+  @Cron('0 * * * *', {
     timeZone: 'Asia/Ho_Chi_Minh',
   })
   async handleCron() {
@@ -30,7 +30,8 @@ export class CronTask {
     // const user = await this.userRepository.findOne();
     // console.log(user);
     // await this.changePendingTransaction();
-    // await this.changeOrderNotPrePaid();
+    await this.changeOrderNotPrePaid();
+    await this.changeOrderNotPurchase();
   }
 
   private async changePendingTransaction() {
@@ -100,6 +101,60 @@ export class CronTask {
         this.transactionRepository.insert({
           tourGuide: order.tourGuide,
           amount: +order.tourGuideDeposit,
+          type: TransactionType.BACK_PREPAID,
+          status: TransactionStatus.SUCCESS,
+          wallet: null,
+          time: null,
+          user: null,
+        }),
+      );
+    }
+    await Promise.all([...task]);
+  }
+
+  private async changeOrderNotPurchase() {
+    const currentTime = moment().format('YYYY-MM-DD');
+    const sevenDaysBeforeDeparture = moment().add(7, 'days').format('YYYY-MM-DD');
+    const [orderNotPrepaid, system] = await Promise.all([
+      this.orderRepository.find({
+        where: {
+          status: OrderStatus.WAITING_PURCHASE,
+          startDate: LessThan(sevenDaysBeforeDeparture),
+        },
+        relations: ['tourGuide'],
+      }),
+      this.systemRepository.findOne(),
+    ]);
+    const task = [];
+    for (const order of orderNotPrepaid) {
+      task.push(
+        this.orderRepository.update(
+          { id: order.id },
+          { status: OrderStatus.REJECTED },
+        ),
+      );
+      task.push(
+        this.systemRepository.update(
+          { id: system.id },
+          {
+            balance: () => `system.balance - ${+order.tourGuideDeposit} - ${+order.paid}`,
+          },
+        ),
+      );
+      task.push(
+        this.tourGuideRepository.update(
+          { id: order.tourGuide.id },
+          {
+            availableBalance: () =>
+              `tour_guides.available_balance + ${order.tourGuideDeposit} + ${+order.paid}`,
+            balance: () => `tour_guides.balance + ${order.tourGuideDeposit} + ${+order.paid}`,
+          },
+        ),
+      );
+      task.push(
+        this.transactionRepository.insert({
+          tourGuide: order.tourGuide,
+          amount: +order.tourGuideDeposit + +order.paid,
           type: TransactionType.BACK_PREPAID,
           status: TransactionStatus.SUCCESS,
           wallet: null,
