@@ -376,6 +376,7 @@ export class OrderService {
       throw new HttpException(httpErrors.ORDER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     // let deadlinePrepaid = null;
+    const deadlinePrepaid = moment().subtract(3, 'days').format('YYYY-MM-DD');
     if (body.action === ActionApproveOrder.ACCEPT) {
       // const diffInMonths = moment(order.updatedAt, 'YYYY-MM-DD').diff(
       //   moment(order.startDate, 'YYYY-MM-DD'),
@@ -470,7 +471,7 @@ export class OrderService {
             ? order.price * (system.tourGuidePrepaidOrder / 100)
             : null,
         approveTime: moment(new Date()).toISOString().split('T')[0],
-        // deadlinePrepaid,
+        deadlinePrepaid,
       }),
       task,
     ]);
@@ -860,8 +861,7 @@ export class OrderService {
         }),
       ]);
     } else if (
-      order.status === OrderStatus.WAITING_PURCHASE ||
-      order.status === OrderStatus.WAITING_START
+      order.status === OrderStatus.WAITING_PURCHASE
     ) {
       await Promise.all([
         this.orderRepository.update(
@@ -891,6 +891,49 @@ export class OrderService {
         this.transactionRepository.insert({
           tourGuide: order.tourGuide,
           amount: +order.tourGuideDeposit + 0.1 * +order.price,
+          type: TransactionType.BACK_ORDER,
+          status: TransactionStatus.SUCCESS,
+          wallet: null,
+          time: null,
+          user: null,
+        }),
+      ]);
+    } else if (order.status === OrderStatus.WAITING_START) {
+      await Promise.all([
+        this.orderRepository.update(
+          { id: order.id },
+          { status: OrderStatus.REJECTED },
+        ),
+        this.tourGuideRepository.update(
+          { id: order.tourGuide.id },
+          {
+            availableBalance:
+              order.tourGuide.availableBalance +
+              order.tourGuideDeposit +
+              0.3 * order.price,
+            balance:
+              order.tourGuide.balance +
+              order.tourGuideDeposit +
+              0.3 * order.price,
+          },
+        ),
+        this.systemRepository.update(
+          { id: system.id },
+          {
+            balance:
+              system.balance - order.tourGuideDeposit - order.price,
+          },
+        ),
+        this.userRepository.update(
+          { id: order.user.id },
+          {
+            balance: order.user.balance + 0.7 * order.price,
+            availableBalance: order.user.availableBalance + 0.7 * order.price,
+          },
+        ),
+        this.transactionRepository.insert({
+          tourGuide: order.tourGuide,
+          amount: +order.tourGuideDeposit + 0.3 * +order.price,
           type: TransactionType.BACK_ORDER,
           status: TransactionStatus.SUCCESS,
           wallet: null,
@@ -974,7 +1017,7 @@ export class OrderService {
           { id: system.id },
           {
             balance:
-              system.balance - 0.9 * order.tourGuideDeposit - 0.1 * order.price,
+              system.balance - 0.9 * order.tourGuideDeposit - order.paid,
           },
         ),
         this.tourGuideRepository.update(
@@ -989,13 +1032,13 @@ export class OrderService {
         this.userRepository.update(
           { id: order.user.id },
           {
-            balance: order.user.balance + 0.1 * order.price,
-            availableBalance: order.user.availableBalance + 0.1 * order.price,
+            balance: order.user.balance + order.paid,
+            availableBalance: order.user.availableBalance + order.paid,
           },
         ),
         this.transactionRepository.insert({
           user: order.user,
-          amount: 0.1 * +order.price,
+          amount: order.paid,
           type: TransactionType.BACK_ORDER,
           status: TransactionStatus.SUCCESS,
           wallet: null,
