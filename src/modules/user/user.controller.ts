@@ -22,6 +22,7 @@ import { TransferDto } from './dtos/transfer.dto';
 import { UserService } from './user.service';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { CreateConsultationDto } from './dtos/create-consultation.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 
 @Controller('users')
 @ApiTags('User')
@@ -83,8 +84,8 @@ export class UserController {
     return this.userService.getUserTransaction(options, userId);
   }
 
-  @UseGuards(UserAuthGuard)
   @Put('/profile')
+  @UseGuards(UserAuthGuard)
   async updateProfile(
     @Body() updateProfileDto: UpdateProfileDto,
     @ActorID() userId: number,
@@ -92,10 +93,19 @@ export class UserController {
     return this.userService.updateProfile(userId, updateProfileDto);
   }
 
-  @Post('\send-consultation')
+  @Post('/send-consultation')
   async sendConsultation(
     @Body() createConsultationDto: CreateConsultationDto
   ) {
     return await this.userService.sendConsultation(createConsultationDto);
+  }
+
+  @Put('/change-password')
+  @UseGuards(UserAuthGuard)
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @ActorID() userId: number,
+  ): Promise<{ message: string }> {
+    return this.userService.changePassword(userId, changePasswordDto);
   }
 }

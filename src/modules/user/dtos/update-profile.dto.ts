@@ -14,17 +14,4 @@ export class UpdateProfileDto {
     @ApiProperty()
     @IsOptional()
     avatar?: string;
-
-    @ApiProperty()
-    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-        message: 'password too weak',
-    })
-
-    @ApiProperty()
-    @IsString()
-    password: string;
-    
-    @ApiProperty()
-    @IsString()
-    confirmPassword: string;
 }

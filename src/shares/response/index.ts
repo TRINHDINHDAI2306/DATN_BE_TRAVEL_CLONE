@@ -294,4 +294,19 @@ export const httpResponse = {
     code: 'REPORT_005',
     statusCode: 200,
   },
+  CHANGE_PASSWORD: {
+    message: 'Password changed successfully',
+    code: 'PASSWORD_CHANGE_001',
+    statusCode: 200,
+  },
+  SEND_CONSULTATION: {
+    message: 'Yêu cầu tư vấn đã được gửi đến hướng đẫn viên',
+    code: 'SEND_CONSULTATION_001',
+    statusCode: 200,
+  },
+  UPDATE_PROFILE: {
+    message: 'Profile updated successfully',
+    code: 'UPDATE_PROFILE_001',
+    statusCode: 200,
+  },
 };
