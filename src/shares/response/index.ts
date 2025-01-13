@@ -1,311 +1,311 @@
 export const httpResponse = {
   REGISTER_SEND_MAIL: {
-    message: 'Please check your email to confirm registation',
+    message: 'Vui lòng kiểm tra email để xác nhận đăng ký',
     code: 'USER_001',
     statusCode: 200,
   },
   REGISTER_SUCCESS: {
-    message: 'Register success',
+    message: 'Đăng ký thành công',
     code: 'USER_002',
     statusCode: 200,
   },
   LOGIN_SUCCESS: {
-    message: 'Login success',
+    message: 'Đăng nhập thành công',
     code: 'USER_003',
     statusCode: 200,
   },
   FORGOT_PASSWORD_SUCCESS: {
-    message: 'Change password success',
+    message: 'Đổi mật khẩu thành công',
     code: 'USER_004',
     statusCode: 200,
   },
   GEN_LINK_SUCCESS: {
-    message: 'Gen success',
+    message: 'Tạo liên kết thành công',
     code: 'Gen success',
     statusCode: 200,
   },
   // TOUR
   CREATE_TOUR_SUCCESS: {
-    message: 'Tour has ben created, please wait admin review',
+    message: 'Tour đã được tạo, vui lòng chờ quản trị viên duyệt',
     code: 'TOUR_001',
     statusCode: 200,
   },
   UPDATE_TOUR_SUCCESS: {
-    message: 'Tour has been edited.',
+    message: 'Tour đã được chỉnh sửa',
     code: 'TOUR_001',
     statusCode: 200,
   },
   DELETE_TOUR_SUCCESS: {
-    message: 'Tour has been deleted.',
+    message: 'Tour đã được xóa',
     code: 'TOUR_001',
     statusCode: 200,
   },
   APPROVE_TOUR_SUCCESS: {
-    message: 'Tour have been actived',
+    message: 'Tour đã được kích hoạt',
     code: 'TOUR_002',
     statusCode: 200,
   },
   GET_TOUR_SUCCESS: {
-    message: 'Get tour success',
+    message: 'Lấy thông tin tour thành công',
     code: 'TOUR_002',
     statusCode: 200,
   },
   // PROVINCE
   GET_PROVINCE_SUCCESS: {
-    message: 'Get province success',
+    message: 'Lấy thông tin tỉnh thành thành công',
     code: 'TOUR_002',
     statusCode: 200,
   },
   // VOUCHER
   CREATE_VOUCHER_SUCCESS: {
-    message: 'Create voucher success',
+    message: 'Tạo voucher thành công',
     code: 'VOUCHER_001',
     statusCode: 200,
   },
 
   CLAIM_VOUCHER_SUCCESS: {
-    message: 'claim voucher success',
+    message: 'Nhận voucher thành công',
     code: 'VOUCHER_002',
     statusCode: 200,
   },
 
   GET_VOUCHER_SUCCESS: {
-    message: 'Get voucher success',
+    message: 'Lấy thông tin voucher thành công',
     code: 'VOUCHER_003',
     statusCode: 200,
   },
 
-  //TOUR GUIDE
+  // TOUR GUIDE
   GET_TOURGUIDE_SUCCESS: {
-    message: 'Get tour guide success',
+    message: 'Lấy thông tin hướng dẫn viên thành công',
     code: 'TOUR_GUIDE_001',
     statusCode: 200,
   },
   RESPONSE_SUCCESS: {
-    message: 'Response success',
+    message: 'Phản hồi thành công',
     code: 'TOUR_GUIDE_002',
     statusCode: 200,
   },
   UPDATE_STATUS_TOURGUIDE_SUCCESS: {
-    message: 'update success',
+    message: 'Cập nhật trạng thái thành công',
     code: 'TOUR_GUIDE_003',
     statusCode: 200,
   },
 
-  //POST
+  // POST
 
   // ORDER
   GET_ORDER_SUCCESS: {
-    message: 'Get orders success',
+    message: 'Lấy danh sách đơn hàng thành công',
     code: 'ORDER_001',
     statusCode: 200,
   },
   APPROVE_ORDER_SUCCESS: {
-    message: 'Approve order success',
+    message: 'Duyệt đơn hàng thành công',
     code: 'ORDER_002',
     statusCode: 200,
   },
   PAID_ORDER_SUCCESS: {
-    message: 'Paid order success',
+    message: 'Thanh toán đơn hàng thành công',
     code: 'ORDER_003',
     statusCode: 200,
   },
   START_ORDER_SUCCESS: {
-    message: 'Order start success',
+    message: 'Bắt đầu đơn hàng thành công',
     code: 'ORDER_004',
     statusCode: 200,
   },
   CANCEL_ORDER_SUCCESS: {
-    message: 'Order cancelled',
+    message: 'Hủy đơn hàng thành công',
     code: 'ORDER_005',
     statusCode: 200,
   },
   END_ORDER_SUCCESS: {
-    message: 'Order End',
+    message: 'Kết thúc đơn hàng thành công',
     code: 'ORDER_006',
     statusCode: 200,
   },
   PREPAID_ORDER_SUCCESS: {
-    message: 'Prepaid order success',
+    message: 'Thanh toán trước thành công',
     code: 'ORDER_007',
     statusCode: 200,
   },
   RATE_ORDER_SUCCESS: {
-    message: 'Rate order success',
+    message: 'Đánh giá đơn hàng thành công',
     code: 'ORDER_008',
     statusCode: 200,
   },
-  //GET ME
+  // GET ME
   GET_ME_SUCCESS: {
-    message: 'get orders success',
+    message: 'Lấy thông tin thành công',
     code: 'ME_001',
     statusCode: 200,
   },
   // ADMIN
   CREATE_ADMIN_SUCCESS: {
-    message: 'Create admin success',
+    message: 'Tạo quản trị viên thành công',
     code: 'ADMIN_001',
     statusCode: 200,
   },
   ACTIVE_ADMIN_SUCCESS: {
-    message: 'Active admin success',
+    message: 'Kích hoạt quản trị viên thành công',
     code: 'ADMIN_002',
     statusCode: 200,
   },
   GET_ADMIN_SUCCESS: {
-    message: 'Get admin success',
+    message: 'Lấy thông tin quản trị viên thành công',
     code: 'ADMIN_003',
     statusCode: 200,
   },
   CHANGE_STATUS_MOD_SUCCESS: {
-    message: 'Change status mod success',
+    message: 'Thay đổi trạng thái quản trị viên thành công',
     code: 'ADMIN_004',
     statusCode: 200,
   },
   DELETE_MOD_SUCCESS: {
-    message: 'Delete mod success',
+    message: 'Xóa quản trị viên thành công',
     code: 'ADMIN_005',
     statusCode: 200,
   },
-  //USER
+  // USER
   CHANGE_USER_STATUS_SUCCESS: {
-    message: 'Change status Success',
+    message: 'Thay đổi trạng thái người dùng thành công',
     code: 'USER_001',
     statusCode: 200,
   },
   GET_USER_SUCCESS: {
-    message: 'Get user success',
+    message: 'Lấy thông tin người dùng thành công',
     code: 'USER_002',
     statusCode: 200,
   },
   DELETE_USER_SUCCES: {
-    message: 'Delete user success',
+    message: 'Xóa người dùng thành công',
     code: 'USER_003',
     statusCode: 200,
   },
-  //POST
+  // POST
   CREATE_POST_SUCCESS: {
-    message: 'Post created',
+    message: 'Tạo bài đăng thành công',
     code: 'POST_001',
     statusCode: 200,
   },
   APPROVE_POST_SUCCESS: {
-    message: 'Post approve',
+    message: 'Phê duyệt bài đăng thành công',
     code: 'POST_002',
     statusCode: 200,
   },
   REQUEST_UPDATE_POST_SUCCESS: {
-    message: 'Request update post success',
+    message: 'Yêu cầu cập nhật bài đăng thành công',
     code: 'POST_003',
     statusCode: 200,
   },
   UPDATE_POST_SUCCESS: {
-    message: 'Post updated',
+    message: 'Cập nhật bài đăng thành công',
     code: 'POST_004',
     statusCode: 200,
   },
   GET_POST_SUCCESS: {
-    message: 'Get post guide success',
+    message: 'Lấy thông tin bài đăng thành công',
     code: 'POST_005',
     statusCode: 200,
   },
   DELETE_POST_SUCCESS: {
-    message: 'Post deleted',
+    message: 'Xóa bài đăng thành công',
     code: 'POST_006',
     statusCode: 200,
   },
-  // Request
+  // REQUEST
   CREATE_REQUEST_SUCCESS: {
-    message: 'Request created',
+    message: 'Tạo yêu cầu thành công',
     code: 'REQUEST_001',
     statusCode: 200,
   },
 
   GET_REQUEST_SUCCESS: {
-    message: 'Get requesst success',
+    message: 'Lấy thông tin yêu cầu thành công',
     code: 'REQUEST_002',
     statusCode: 200,
   },
 
   DELETE_REQUEST_SUCCESS: {
-    message: 'Request deleted',
+    message: 'Xóa yêu cầu thành công',
     code: 'REQUEST_003',
     statusCode: 200,
   },
 
   ///
   CREATE_COMMENT_SUCCESS: {
-    message: 'Comment created',
+    message: 'Tạo bình luận thành công',
     code: 'COMMENT_001',
     statusCode: 200,
   },
 
   GET_COMMENT_SUCCESS: {
-    message: 'Get success',
+    message: 'Lấy bình luận thành công',
     code: 'COMMENT_002',
     statusCode: 200,
   },
 
   UPDATE_COMMENT_SUCCESS: {
-    message: 'update success',
+    message: 'Cập nhật bình luận thành công',
     code: 'COMMENT_003',
     statusCode: 200,
   },
 
   DELETE_COMMENT_SUCCESS: {
-    message: 'Delete success',
+    message: 'Xóa bình luận thành công',
     code: 'COMMENT_004',
     statusCode: 200,
   },
-  // GET TRansaction succes
+  // GET TRANSACTION SUCCESS
   GET_TRANSACTION_SUCCESS: {
-    message: 'Get transaction success',
+    message: 'Lấy giao dịch thành công',
     code: 'TRANSACTION_001',
     statusCode: 200,
   },
   CREATE_TRANSACTION_SUCCESS: {
-    message: 'Create transaction success',
+    message: 'Tạo giao dịch thành công',
     code: 'TRANSACTION_002',
     statusCode: 200,
   },
   // REPORT
   CREATE_REPORT_SUCCESS: {
-    message: 'Report created',
+    message: 'Tạo báo cáo thành công',
     code: 'REPORT_001',
     statusCode: 200,
   },
   GET_REPORT_SUCCESS: {
-    message: 'Get report success',
+    message: 'Lấy báo cáo thành công',
     code: 'REPORT_002',
     statusCode: 200,
   },
   DELETE_REPORT_SUCCESS: {
-    message: 'Deleted report success',
+    message: 'Xóa báo cáo thành công',
     code: 'REPORT_003',
     statusCode: 200,
   },
   HANLED_REPORT: {
-    message: 'Handled Report',
+    message: 'Xử lý báo cáo thành công',
     code: 'REPORT_004',
     statusCode: 200,
   },
   CREATING_MEETING_REPORT: {
-    message: 'Created meeting',
+    message: 'Tạo cuộc họp thành công',
     code: 'REPORT_005',
     statusCode: 200,
   },
   CHANGE_PASSWORD: {
-    message: 'Password changed successfully',
+    message: 'Đổi mật khẩu thành công',
     code: 'PASSWORD_CHANGE_001',
     statusCode: 200,
   },
   SEND_CONSULTATION: {
-    message: 'Yêu cầu tư vấn đã được gửi đến hướng đẫn viên',
+    message: 'Yêu cầu tư vấn đã được gửi đến hướng dẫn viên',
     code: 'SEND_CONSULTATION_001',
     statusCode: 200,
   },
   UPDATE_PROFILE: {
-    message: 'Profile updated successfully',
+    message: 'Cập nhật hồ sơ thành công',
     code: 'UPDATE_PROFILE_001',
     statusCode: 200,
   },
