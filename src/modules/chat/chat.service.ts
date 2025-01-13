@@ -19,6 +19,16 @@ export class ChatService {
   }
 
   getUserChatted({ userId, role }) {
+    const subQuery = this.chatRepository
+      .createQueryBuilder('subChat')
+      .select('MAX(subChat.id)', 'lastChatId')
+      .where(
+        `${role === ActorRole.USER ? 'subChat.userId' : 'subChat.tourGuideId'} = :userId`,
+        { userId },
+      )
+      .groupBy('subChat.userId')
+      .addGroupBy('subChat.tourGuideId');
+
     return this.chatRepository
       .createQueryBuilder('chat')
       .leftJoinAndSelect('chat.user', 'user', 'chat.userId = user.id')
@@ -27,15 +37,9 @@ export class ChatService {
         'tourGuide',
         'chat.tourGuideId = tourGuide.id',
       )
-      .where(
-        `${
-          role === ActorRole.USER ? 'chat.userId' : 'chat.tourGuideId'
-        } = :userId`,
-        { userId },
-      )
+      .where(`chat.id IN (${subQuery.getQuery()})`)
+      .setParameters(subQuery.getParameters())
       .orderBy('chat.id', 'DESC')
-      .groupBy('chat.userId')
-      .addGroupBy('chat.tourGuideId')
       .getMany();
   }
 

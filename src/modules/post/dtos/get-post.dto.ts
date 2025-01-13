@@ -5,24 +5,24 @@ import { PostStatus, Topics } from 'src/shares/enum/post.enum';
 
 export class AdminGetPostDto extends BasePaginationRequestDto {
   @ApiProperty()
-  @IsEnum(PostStatus)
-  @IsNotEmpty()
+  @IsEnum(PostStatus, { message: 'Trạng thái bài viết không hợp lệ' })
+  @IsNotEmpty({ message: 'Trạng thái bài viết không được để trống' })
   status: PostStatus;
 
   @ApiProperty({ required: false })
-  @IsString()
+  @IsString({ message: 'Từ khóa phải là một chuỗi' })
   @IsOptional()
   keyword: string;
 }
 
 export class GetPostDto extends BasePaginationRequestDto {
   @ApiProperty({ required: false })
-  @IsEnum(Topics)
+  @IsEnum(Topics, { message: 'Chủ đề bài viết không hợp lệ' })
   @IsOptional()
   topics: Topics;
 
   @ApiProperty({ required: false })
-  @IsString()
+  @IsString({ message: 'Từ khóa phải là một chuỗi' })
   @IsOptional()
   keyword: string;
 }

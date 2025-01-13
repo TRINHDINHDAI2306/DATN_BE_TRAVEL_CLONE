@@ -9,25 +9,25 @@ import {
 
 export class ActiveAdminDto {
   @ApiProperty()
-  @IsNotEmpty()
-  @IsEmail()
+  @IsNotEmpty({ message: 'Email không được để trống' })
+  @IsEmail({}, { message: 'Định dạng email không hợp lệ' })
   email: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Tên người dùng không được để trống' })
+  @IsString({ message: 'Tên người dùng phải là chuỗi ký tự' })
   username: string;
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Token phải là chuỗi ký tự' })
+  @IsNotEmpty({ message: 'Token không được để trống' })
   token: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Mật khẩu không được để trống' })
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'password too weak',
+  message: 'Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường, và một ký tự đặc biệt hoặc số',
   })
-  @IsString()
+  @IsString({ message: 'Mật khẩu phải là chuỗi ký tự' })
   password: string;
 }

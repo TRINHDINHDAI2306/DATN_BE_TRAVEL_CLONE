@@ -10,17 +10,17 @@ import { AdminRole } from 'src/shares/enum/admin.enum';
 
 export class CreateAdminDto {
   @ApiProperty()
-  @IsNotEmpty()
-  @IsEmail()
+  @IsNotEmpty({ message: 'Email không được để trống' })
+  @IsEmail({}, { message: 'Địa chỉ email không hợp lệ' })
   email: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Tên người dùng không được để trống' })
+  @IsString({ message: 'Tên người dùng phải là một chuỗi' })
   username: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsEnum(AdminRole)
+  @IsNotEmpty({ message: 'Vai trò không được để trống' })
+  @IsEnum(AdminRole, { message: 'Vai trò không hợp lệ' })
   role: AdminRole;
 }

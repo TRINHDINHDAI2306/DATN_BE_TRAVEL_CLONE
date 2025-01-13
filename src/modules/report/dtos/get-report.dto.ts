@@ -5,7 +5,7 @@ import { GetReportStatus } from 'src/shares/enum/report.enum';
 
 export class GetReportDto extends BasePaginationRequestDto {
   @ApiProperty({ required: false })
-  @IsEnum(GetReportStatus)
+  @IsEnum(GetReportStatus, { message: 'Trạng thái báo cáo không hợp lệ' })
   @IsOptional()
   status: GetReportStatus;
 }

@@ -8,23 +8,23 @@ import {
 
 export class OrderTourDto {
   @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
+  @IsNumber({}, { message: 'ID tour phải là số' })
+  @IsNotEmpty({ message: 'ID tour không được để trống' })
   tourId: number;
 
   @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
+  @IsNumber({}, { message: 'Số lượng thành viên phải là số' })
+  @IsNotEmpty({ message: 'Số lượng thành viên không được để trống' })
   numberOfMember: number;
 
   @ApiProperty()
-  @IsNumber()
+  @IsNumber({}, { message: 'ID voucher phải là số' })
   @IsOptional()
   voucherId: number;
 
   @ApiProperty()
-  @IsDateString()
-  @IsNotEmpty()
+  @IsDateString({}, { message: 'Ngày bắt đầu phải là định dạng ngày hợp lệ' })
+  @IsNotEmpty({ message: 'Ngày bắt đầu không được để trống' })
   startDate: Date;
 
   // @ApiProperty({ type: [TourScheduleDto] })

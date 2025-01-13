@@ -8,12 +8,12 @@ import {
 
 export class CreateMeetingReportDto {
   @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
+  @IsNumber({}, { message: 'ID báo cáo phải là một số' })
+  @IsNotEmpty({ message: 'ID báo cáo không được để trống' })
   reportId: number;
 
   @ApiProperty()
-  @IsDateString()
+  @IsDateString({}, { message: 'Ngày họp không hợp lệ' })
   @IsOptional()
   meetingDate: Date;
 }
