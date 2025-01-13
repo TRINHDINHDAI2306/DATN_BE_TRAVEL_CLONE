@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class SendOtpForgotPasswordDto {
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Email phải là chuỗi' })
+  @IsNotEmpty({ message: 'Email không được để trống' })
   email: string;
 }

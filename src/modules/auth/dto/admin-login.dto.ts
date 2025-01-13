@@ -3,15 +3,15 @@ import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class LoginDto {
   @ApiProperty()
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({}, { message: 'Địa chỉ email không hợp lệ' })
+  @IsNotEmpty({ message: 'Email không được để trống' })
   email: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Mật khẩu không được để trống' })
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'password too weak',
+    message: 'Mật khẩu quá yếu',
   })
-  @IsString()
+  @IsString({ message: 'Mật khẩu phải là chuỗi' })
   password: string;
 }

@@ -4,7 +4,7 @@ import { GetTourOptions } from 'src/shares/enum/order.enum';
 
 export class GetOrdersDto {
   @ApiProperty()
-  @IsEnum(GetTourOptions)
-  @IsNotEmpty()
+  @IsEnum(GetTourOptions, { message: 'Loại tour không hợp lệ' })
+  @IsNotEmpty({ message: 'Loại tour không được để trống' })
   type: GetTourOptions;
 }

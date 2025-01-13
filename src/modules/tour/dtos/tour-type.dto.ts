@@ -4,7 +4,7 @@ import { TourTypes } from 'src/shares/enum/tour.enum';
 
 export class TourTypesDto {
   @ApiProperty({ required: false })
-  @IsEnum(TourTypes)
+  @IsEnum(TourTypes, { message: 'Type phải là một trong các giá trị hợp lệ' })
   @IsNotEmpty()
   type: TourTypes;
 }

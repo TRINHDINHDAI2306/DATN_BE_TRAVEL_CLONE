@@ -2,25 +2,25 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 export class RegisterDto {
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Tên người dùng không được để trống' })
+  @IsString({ message: 'Tên người dùng phải là chuỗi' })
   username: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsEmail()
+  @IsNotEmpty({ message: 'Email không được để trống' })
+  @IsEmail({}, { message: 'Địa chỉ email không hợp lệ' })
   email: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Mật khẩu không được để trống' })
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'password too weak',
+    message: 'Mật khẩu quá yếu. Mật khẩu phải có chữ hoa, chữ thường và ký tự đặc biệt hoặc số.',
   })
-  @IsString()
+  @IsString({ message: 'Mật khẩu phải là chuỗi' })
   password: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Xác nhận mật khẩu không được để trống' })
+  @IsString({ message: 'Xác nhận mật khẩu phải là chuỗi' })
   confirmPassword: string;
 }

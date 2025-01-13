@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class PaidOrderDto {
   @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
+  @IsNumber({}, { message: 'ID đơn hàng phải là số' })
+  @IsNotEmpty({ message: 'ID đơn hàng không được để trống' })
   orderId: number;
 }
