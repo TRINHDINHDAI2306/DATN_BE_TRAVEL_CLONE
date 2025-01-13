@@ -178,7 +178,7 @@ export const httpResponse = {
     code: 'USER_001',
     statusCode: 200,
   },
-  GET_USER_SUCCESS: {
+  GET_ONE_USER_SUCCESS: {
     message: 'Lấy thông tin người dùng thành công',
     code: 'USER_002',
     statusCode: 200,
