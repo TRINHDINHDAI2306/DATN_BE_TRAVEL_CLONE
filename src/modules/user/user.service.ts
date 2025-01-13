@@ -426,7 +426,7 @@ export class UserService {
     };
   
     return {
-      ...httpResponse.GET_USER_SUCCESS,
+      ...httpResponse.GET_ONE_USER_SUCCESS,
       returnValue: data,
     };
   }
