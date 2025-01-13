@@ -407,4 +407,27 @@ export class UserService {
   
     return httpResponse.CHANGE_PASSWORD;
   }
+
+
+  async getOneUser(userId: number): Promise<Response> {
+    // Lấy thông tin user từ database
+    const user = await this.userRepository.findOne({
+      where: { id: userId, verifyStatus: UserStatus.ACTIVE },
+    });
+    if (!user) {
+      throw new HttpException(httpErrors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    };
+    const data = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      avatar: user.avatar,
+      verifyStatus: user.verifyStatus,
+    };
+  
+    return {
+      ...httpResponse.GET_USER_SUCCESS,
+      returnValue: data,
+    };
+  }
 }

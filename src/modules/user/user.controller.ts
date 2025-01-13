@@ -108,4 +108,9 @@ export class UserController {
   ): Promise<{ message: string }> {
     return this.userService.changePassword(userId, changePasswordDto);
   }
+
+  @Get('/guest/:id')
+  async getOneUser(@Param('id') id: number): Promise<Response> {
+    return this.userService.getOneUser(id);
+  }
 }

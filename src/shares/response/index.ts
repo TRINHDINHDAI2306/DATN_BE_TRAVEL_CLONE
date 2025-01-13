@@ -81,6 +81,11 @@ export const httpResponse = {
     code: 'TOUR_GUIDE_001',
     statusCode: 200,
   },
+  GET_USER_SUCCESS: {
+    message: 'Lấy thông tin người dùng thành công',
+    code: 'TOUR_GUIDE_001',
+    statusCode: 200,
+  },
   RESPONSE_SUCCESS: {
     message: 'Phản hồi thành công',
     code: 'TOUR_GUIDE_002',
