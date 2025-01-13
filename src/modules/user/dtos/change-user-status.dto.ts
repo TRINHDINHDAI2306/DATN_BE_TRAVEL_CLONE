@@ -4,12 +4,12 @@ import { ChangeStatus } from 'src/shares/enum/user.enum';
 
 export class AdminChangeStatusUserDto {
   @ApiProperty()
-  @IsEnum(ChangeStatus)
-  @IsNotEmpty()
+  @IsEnum(ChangeStatus, { message: 'Trạng thái thay đổi không hợp lệ' })
+  @IsNotEmpty({ message: 'Trạng thái thay đổi là bắt buộc' })
   status: ChangeStatus;
 
   @ApiProperty({ required: false })
-  @IsNumber()
-  @IsNotEmpty()
+  @IsNumber({}, { message: 'ID người dùng phải là một số' })
+  @IsNotEmpty({ message: 'ID người dùng là bắt buộc' })
   userId: number;
 }

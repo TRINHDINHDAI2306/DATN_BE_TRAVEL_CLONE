@@ -5,7 +5,7 @@ import { DiscountType } from 'src/shares/enum/voucher.enum';
 
 export class GetVoucherDto extends BasePaginationRequestDto {
   @ApiProperty({ required: false })
-  @IsEnum(DiscountType)
-  @IsOptional()
+  @IsEnum(DiscountType, { message: 'Loại giảm giá không hợp lệ' })
+  @IsOptional({ message: 'Loại giảm giá là tùy chọn' })
   discountType: DiscountType;
 }
