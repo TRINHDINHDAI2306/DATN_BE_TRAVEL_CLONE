@@ -26,6 +26,8 @@ import { TransferDto } from './dtos/transfer.dto';
 import { UpdateTourguideInformationDto } from './dtos/update-infor.dto';
 import { UpdateStatusTourGuideDto } from './dtos/update-status-tourguide.dto';
 import { TourGuideService } from './tour-guide.service';
+import { UpdateProfileDto } from '../user/dtos/update-profile.dto';
+import { ChangePasswordDto } from '../user/dtos/change-password.dto';
 
 @Controller('tour-guide')
 @ApiTags('Tour Guide')
@@ -120,5 +122,23 @@ export class TourGuideController {
     @ActorID() tourGuideId: number,
   ): Promise<Response> {
     return this.tourGuideService.getTourguideTransaction(options, tourGuideId);
+  }
+
+  @Put('/profile')
+  @UseGuards(TourGuideAuthGuard)
+  async updateProfile(
+    @Body() updateProfileDto: UpdateProfileDto,
+    @ActorID() userId: number,
+  ) {
+    return this.tourGuideService.updateProfile(userId, updateProfileDto);
+  }
+
+  @Put('/change-password')
+  @UseGuards(TourGuideAuthGuard)
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @ActorID() userId: number,
+  ): Promise<{ message: string }> {
+    return this.tourGuideService.changePassword(userId, changePasswordDto);
   }
 }
