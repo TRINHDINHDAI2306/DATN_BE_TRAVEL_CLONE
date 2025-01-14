@@ -25,6 +25,10 @@ export class CronTask {
   @Cron('0 * * * *', {
     timeZone: 'Asia/Ho_Chi_Minh',
   })
+
+  // @Cron(CronExpression.EVERY_10_SECONDS, {
+  //   timeZone: 'Asia/Ho_Chi_Minh',
+  // })
   async handleCron() {
     // Your task logic goes here
     // const user = await this.userRepository.findOne();
