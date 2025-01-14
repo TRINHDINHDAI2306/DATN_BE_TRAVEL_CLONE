@@ -14,7 +14,7 @@ import {
   OrderStatus,
 } from 'src/shares/enum/order.enum';
 import { GetOrdersDto } from './dtos/get-orders.dto';
-import { In, Not } from 'typeorm';
+import { In, LessThan, Not } from 'typeorm';
 import { httpResponse } from 'src/shares/response';
 import { Response } from 'src/shares/response/response.interface';
 import { ApproveOrderDto } from './dtos/approve-order.dto';
@@ -800,6 +800,7 @@ export class OrderService {
     userId: number,
   ): Promise<Response> {
     const { orderId } = body;
+    const currentDateMinusOneDays = moment().add(1, 'days').format('YYYY-MM-DD');
     const [order, user, system] = await Promise.all([
       this.orderRepository.findOne({
         where: {
@@ -811,6 +812,7 @@ export class OrderService {
               OrderStatus.REJECTED,
             ]),
           ),
+          startDate: LessThan(currentDateMinusOneDays),
         },
         relations: ['tourGuide'],
       }),
@@ -820,7 +822,7 @@ export class OrderService {
       this.systemRepository.findOne(),
     ]);
     if (!order) {
-      throw new HttpException(httpErrors.ORDER_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new HttpException(httpErrors.CANCEL_ORDER, HttpStatus.NOT_FOUND);
     }
     if (!user) {
       throw new HttpException(httpErrors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
