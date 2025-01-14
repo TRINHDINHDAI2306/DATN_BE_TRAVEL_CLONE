@@ -107,8 +107,12 @@ export const httpErrors = {
     code: 'ERR_ORDER_001',
   },
   ORDER_NOT_FOUND: {
-    message: 'Order not found',
+    message: 'Không tìm thấy đơn hàng',
     code: 'ERR_ORDER_002',
+  },
+  CANCEL_ORDER: {
+    message: 'Hủy đơn hàng không thành công',
+    code: 'ERR_ORDER_003',
   },
   ORDER_PAID_NOT_VALID: {
     message: 'Order paid is not valid',
