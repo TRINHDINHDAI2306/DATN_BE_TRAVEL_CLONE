@@ -349,7 +349,7 @@ export class UserService {
 
     await this.userRepository.save(user);
 
-    return httpResponse.SEND_CONSULTATION;
+    return httpResponse.UPDATE_PROFILE;
   }
 
   async sendConsultation(createConsultationDto: CreateConsultationDto) {

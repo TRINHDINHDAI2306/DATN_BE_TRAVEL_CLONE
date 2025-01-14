@@ -48,12 +48,12 @@ export class CreateVoucherDto {
   quantity: number;
 
   @ApiProperty()
-  @IsDateString({ message: 'Ngày bắt đầu phải là một chuỗi ngày hợp lệ' })
+  @IsDateString()
   @IsNotEmpty({ message: 'Ngày bắt đầu là bắt buộc' })
   startDate: Date;
 
   @ApiProperty()
-  @IsDateString({ message: 'Ngày kết thúc phải là một chuỗi ngày hợp lệ' })
+  @IsDateString()
   @IsNotEmpty({ message: 'Ngày kết thúc là bắt buộc' })
   endDate: Date;
 }

@@ -35,6 +35,11 @@ import { ResponseRegisterTourguideDto } from './dtos/response-registation-tourgu
 import { TransferDto } from './dtos/transfer.dto';
 import { UpdateTourguideInformationDto } from './dtos/update-infor.dto';
 import { UpdateStatusTourGuideDto } from './dtos/update-status-tourguide.dto';
+import { UpdateProfileDto } from '../user/dtos/update-profile.dto';
+import { ChangePasswordDto } from '../user/dtos/change-password.dto';
+import * as bcrypt from 'bcryptjs';
+import { authConfig } from 'src/configs/auth.config';
+
 const getIP = promisify(require('external-ip')());
 
 @Injectable()
@@ -501,5 +506,56 @@ export class TourGuideService {
     }
     await this.tourGuideRepository.update({ id: tourGuide.id }, { ...body });
     return httpResponse.UPDATE_STATUS_TOURGUIDE_SUCCESS;
+  }
+
+  async updateProfile(userId: number, updateProfileDto: UpdateProfileDto) {
+    const tourGuide = await this.tourGuideRepository.findOne({
+      where: { id: userId, verifyStatus: TourguideStatus.ACTIVE },
+    });
+    if (!tourGuide) {
+      throw new HttpException(
+        httpErrors.TOUR_GUIDE_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    
+    const { username, phone, avatar } = updateProfileDto;
+    if (username) tourGuide.username = username;
+    if (phone) tourGuide.phone = phone;
+    if (avatar) tourGuide.avatar = avatar;
+
+    await this.tourGuideRepository.save(tourGuide);
+
+    return httpResponse.UPDATE_PROFILE;
+  }
+
+  async changePassword(userId: number, changePasswordDto: ChangePasswordDto): Promise<{ message: string }> {
+    const { currentPassword, newPassword } = changePasswordDto;
+  
+    // Lấy thông tin user từ database
+    const tourGuide = await this.tourGuideRepository.findOne({
+      where: { id: userId, verifyStatus: TourguideStatus.ACTIVE },
+    });
+    if (!tourGuide) {
+      throw new HttpException(
+        httpErrors.TOUR_GUIDE_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  
+    // Kiểm tra mật khẩu hiện tại
+    const isPasswordValid = await bcrypt.compare(currentPassword, tourGuide.password);
+    if (!isPasswordValid) {
+      throw new HttpException(httpErrors.CURRENT_PASSWORD_IS_INCORRECT, HttpStatus.BAD_REQUEST);
+    }
+  
+    // Mã hóa mật khẩu mới
+    const hashedNewPassword = await bcrypt.hash(newPassword, +authConfig.salt);
+  
+    // Cập nhật mật khẩu
+    tourGuide.password = hashedNewPassword;
+    await this.tourGuideRepository.save(tourGuide);
+  
+    return httpResponse.CHANGE_PASSWORD;
   }
 }
