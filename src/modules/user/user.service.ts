@@ -262,6 +262,7 @@ export class UserService {
     const crypto = require('crypto');
     const hmac = crypto.createHmac('sha512', secretKey);
     const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
+    console.log("==============" + secureHash, signed);
     if (secureHash === signed) {
       const orderId = query['vnp_TxnRef'];
       const rspCode = query['vnp_ResponseCode'];
@@ -324,6 +325,8 @@ export class UserService {
           },
         );
       }
+
+      return httpResponse.DEPOSIT;
     } else {
       console.log({
         hash: secureHash,
@@ -331,6 +334,7 @@ export class UserService {
       });
 
       console.log('Error');
+      return httpResponse.ERROR_DEPOSIT;
     }
   }
 
