@@ -314,4 +314,14 @@ export const httpResponse = {
     code: 'UPDATE_PROFILE_001',
     statusCode: 200,
   },
+  DEPOSIT: {
+    message: 'Nạp tiền thành công',
+    code: 'DEPOSIT_001',
+    statusCode: 200,
+  },
+  ERROR_DEPOSIT: {
+    message: 'Nạp tiền thất bại',
+    code: 'DEPOSIT_002',
+    statusCode: 400,
+  },
 };
