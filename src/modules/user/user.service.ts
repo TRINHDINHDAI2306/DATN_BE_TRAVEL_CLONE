@@ -273,57 +273,59 @@ export class UserService {
         relations: ['user', 'tourGuide'],
       });
       const task = [];
-      if (transaction.user) {
-        user = await this.userRepository.findOne({
-          where: {
-            id: transaction.user.id,
-            verifyStatus: UserStatus.ACTIVE,
-          },
-        });
-        task.push(
-          this.userRepository.update(
-            { id: transaction.user.id },
-            {
-              balance: user.balance + +vnp_Amount / 100,
-              availableBalance: user.availableBalance + +vnp_Amount / 100,
+      if (transaction.status != TransactionStatus.SUCCESS) {
+        if (transaction.user) {
+          user = await this.userRepository.findOne({
+            where: {
+              id: transaction.user.id,
+              verifyStatus: UserStatus.ACTIVE,
             },
-          ),
-        );
-      } else {
-        tourGuide = await this.tourGuideRepository.findOne({
-          where: {
-            id: transaction.tourGuide.id,
-            verifyStatus: TourguideStatus.ACTIVE,
-          },
-        });
-        task.push(
-          this.tourGuideRepository.update(
-            { id: transaction.tourGuide.id },
-            {
-              balance: tourGuide.balance + +vnp_Amount / 100,
-              availableBalance: tourGuide.availableBalance + +vnp_Amount / 100,
+          });
+          task.push(
+            this.userRepository.update(
+              { id: transaction.user.id },
+              {
+                balance: user.balance + +vnp_Amount / 100,
+                availableBalance: user.availableBalance + +vnp_Amount / 100,
+              },
+            ),
+          );
+        } else {
+          tourGuide = await this.tourGuideRepository.findOne({
+            where: {
+              id: transaction.tourGuide.id,
+              verifyStatus: TourguideStatus.ACTIVE,
             },
-          ),
-        );
-      }
-
-      if (rspCode == '00') {
-        await Promise.all([
-          this.transactionRepository.update(
+          });
+          task.push(
+            this.tourGuideRepository.update(
+              { id: transaction.tourGuide.id },
+              {
+                balance: tourGuide.balance + +vnp_Amount / 100,
+                availableBalance: tourGuide.availableBalance + +vnp_Amount / 100,
+              },
+            ),
+          );
+        }
+  
+        if (rspCode == '00') {
+          await Promise.all([
+            this.transactionRepository.update(
+              { id: transaction.id },
+              {
+                status: TransactionStatus.SUCCESS,
+              },
+            ),
+            ...task,
+          ]);
+        } else {
+          await this.transactionRepository.update(
             { id: transaction.id },
             {
               status: TransactionStatus.SUCCESS,
             },
-          ),
-          ...task,
-        ]);
-      } else {
-        await this.transactionRepository.update(
-          { id: transaction.id },
-          {
-            status: TransactionStatus.SUCCESS,
-          },
-        );
+          );
+        }
       }
 
       return httpResponse.DEPOSIT;
